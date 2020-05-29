@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Hello from './Hello';
+import Card from './Card';
 import * as serviceWorker from './serviceWorker';
+import "tachyons";
+import {robots} from "./robots";
 
 ReactDOM.render(
   <React.StrictMode>
-<Hello/>  </React.StrictMode>,
+    <Card name={robots[0].name} email={robots[0].email} id={robots[0].id} />
+
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
