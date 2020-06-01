@@ -1,13 +1,13 @@
-import {robots} from "../robots";
 import CardList from "../containers/CardList";
 import React, {Component} from "react";
 import SearchBox from '../containers/SearchBox';
 import "./App.css";
 import Scroll from '../containers/Scroll' ;
+import ErrorBoundry from "./ErrorBoundry";
 
 class App extends Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state={
             'robots':[],
             'SearchField':''
@@ -39,7 +39,11 @@ class App extends Component{
         return !robots.length ? <h1 className={"tc"}>Loading .....</h1> :<div className={"tc"}>
             <h1 className={"f1"}>Robofriends</h1>
             <SearchBox searchChange={this.onSearchChange}/>
-            <Scroll><CardList robots={filteredList} /></Scroll></div>;
+            <Scroll>
+                <ErrorBoundry>
+                    <CardList robots={filteredList} />
+                </ErrorBoundry>
+            </Scroll></div>;
 
 
 
