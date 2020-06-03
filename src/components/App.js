@@ -5,41 +5,32 @@ import SearchBox from '../containers/SearchBox';
 import "./App.css";
 import Scroll from '../containers/Scroll' ;
 import ErrorBoundry from "./ErrorBoundry";
-import {setSearchField} from "../actions";
+import {setSearchField,requestRobots} from "../actions";
 
 const  mapStateToProps =(state)=>{
         return{
-            searchField: state.searchField
+            searchField: state.searchRobots.searchField,
+            robots: state.requestRobotsReducer.robots,
+            isPending:state.requestRobotsReducer.isPending,
+            error:state.requestRobotsReducer.error
         }
     };
 const mapDispatchToProps=(dispatch)=>{
   return {
-        onSearchChange:(event)=>dispatch(setSearchField(event.target.value))
+        onSearchChange:(event)=>dispatch(setSearchField(event.target.value)),
+        onRequestRobots:()=>dispatch(requestRobots())
   }
 };
 class App extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-            'robots':[]
-        }
-    }
-
-
 
     componentDidMount() {
-        fetch(
-            "https://jsonplaceholder.typicode.com/users").then(
-            result=>result.json()).then(
-            users=>this.setState({'robots':users}));
-
+        this.props.onRequestRobots();
     }
 
 
 
     render(){
-        const {robots}=this.state;
-        const {searchField, onSearchChange}=this.props;
+        const {searchField,robots,isPending}=this.props;
         const filteredList=
             robots.filter(
                 robot=>{
@@ -47,12 +38,13 @@ class App extends Component{
                 }
             );
 
-        return !robots.length ? <h1 className={"tc"}>Loading .....</h1> :<div className={"tc"}>
+        return isPending ? <h1 className={"tc"}>Loading .....</h1> :<div className={"tc"}>
             <h1 className={"f1"}>Robofriends</h1>
-            <SearchBox searchChange={onSearchChange}/>
+            <SearchBox searchChange={this.props.onSearchChange}/>
             <Scroll>
                 <ErrorBoundry>
                     <CardList robots={filteredList} />
+                    {console.log(filteredList)}
                 </ErrorBoundry>
             </Scroll></div>;
 
